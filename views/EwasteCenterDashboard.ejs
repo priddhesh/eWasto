@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    Center Dashboard
+    <form action="/e-waste-center/addPickUpBoy" method="post">
+        name
+        <input type="text" name="name" id="name">
+        phone
+        <input type="number" name="phone" id="phone">
+        email 
+        <input type="email" name="email" id="email">
+        address 
+        <input type="text" name="address" id="address">
+        password
+        <input type="password" name="password" id="password">
+        Submit
+        <input type="submit" value="Submit">
+    </form>
+
+    approve request
+    <form action="/e-waste-center/approveOrder" method="post">
+        <input type="email" name="email" id="email">
+        <input type="submit" value="approve">
+    </form>
+    
+    test
+    <form action="/e-waste-center/test" method="post">
+        <input type="submit" value="test">
+    </form>
+</body>
+</html>
