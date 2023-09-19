@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Hello admin</h1>
+    <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit perspiciatis hic eum minima! Necessitatibus reprehenderit reiciendis eos dolore qui sapiente, voluptates deserunt autem pariatur eligendi cum esse repellendus, quos error.</h1>
     <form action="/admin/approveCenter" method="post">
         <input type="text" name="email" id="email">
         <button type="submit">Approve</button>
@@ -15,5 +15,12 @@
         <input type="text" name="email" id="email">
         <button type="submit">Disaprove</button>
     </form>
+    <div id="google_element"></div>
+    <script src="http://translate.google.com/translate_a/element.js?cb=loadGoogleTranslate"></script>
+    <script>
+        function loadGoogleTranslate(){
+            new google.translate.TranslateElement("google_element");
+        }
+    </script>
 </body>
 </html>

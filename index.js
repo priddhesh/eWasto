@@ -12,7 +12,7 @@ const ewasteCenter = require("./router/e-wasteCenter");
 
 const { generateReferral } = require("./scripts");
 
-const { authenticate, checkCode } = require("./database");
+const { authenticate, checkCode, checkCredits } = require("./database");
 
 const { sendMail } = require("./nodeMailerConfig");
 
@@ -61,6 +61,7 @@ app
     let Y = req.body.Y;
     let pickup = req.body.pickup;
     let status = 0;
+    let referral = req.body.referral;
 
     var mailOptions = {
       from: process.env.EMAIL,
@@ -68,46 +69,56 @@ app
       subject: "Successfully Registered",
       text: `Registered`,
     };
+    
+    if(req.body.address == undefined)
+    {
+    let referalCode = await generateReferral(10);
+    console.log(referalCode);
+    let val = true;
+    while(val!=false){
+        val = await checkCode(referalCode);
+        if(val===true){
+          referalCode = generateReferral(10);
+        }
+    }
 
-    // let referalCode = await generateReferral(10);
-    // console.log(referalCode);
-    // let val = true;
-    // while(val!=false){
-    //     val = await checkCode(referalCode);
-    //     if(val===true){
-    //       referalCode = generateReferral(10);
-    //     }
-    // }
-
-    // const credits = 0;
-    // pool.query(`INSERT INTO  users(email,phone,name,referral,credits,password) VALUES('${email}','${phone}','${name}','${referalCode}','${credits}','${password}')`, (err, rows) => {
-    //   if (err) throw err;
-    //   else {
-    //     sendMail(mailOptions)
-    //     console.log('Data inserted');
-    //   }
-    // });
-
-    // pool.query(`INSERT INTO  eWasteCenter(email,name,phone,address,X,Y,pickup,status,password) VALUES('${email}','${name}','${phone}','${address}','${X}','${Y}','${pickup}','${status}','${password}')`, (err, rows) => {
-    //   if (err) throw err;
-    //   else {
-    //     sendMail(mailOptions)
-    //     console.log('Data inserted');
-    //   }
-    // });
-    // res.redirect('/login');
-
-    pool.query(
-      `INSERT INTO admin(email,phone,name,password) VALUES('${email}','${phone}','${name}','${password}')`,
-      (err, rows) => {
+    const credits = 0;
+    const referral_credits = 5;
+    pool.query(`INSERT INTO  users(email,phone,name,referral,credits,password) VALUES('${email}','${phone}','${name}','${referalCode}','${credits}','${password}')`, (err, rows) => {
+      if (err) throw err;
+      else {
+        sendMail(mailOptions)
+        console.log('Data inserted');
+      }
+    });
+    
+    if(referral!=undefined){
+      await checkCredits(referral,referral_credits);
+    }
+    }else{
+      console.log(email + " "+ name+ " "+ phone + " "+ address + " "+ X + " " + Y + " " + pickup+" "+ status + " "+ password);
+      
+      pool.query(`INSERT INTO  eWasteCenter(email,name,phone,address,X,Y,pickup,status,password) VALUES('${email}','${name}','${phone}','${address}','${X}','${Y}','${pickup}','${status}','${password}')`, (err, rows) => {
         if (err) throw err;
         else {
           sendMail(mailOptions)
-          console.log("Data inserted");
+          console.log('Data inserted');
         }
-      }
-    );
-    res.redirect("/login");
+      });
+    }
+    res.redirect('/login');
+
+    // pool.query(
+    //   `INSERT INTO admin(email,phone,name,password) VALUES('${email}','${phone}','${name}','${password}')`,
+    //   (err, rows) => {
+    //     if (err) throw err;
+    //     else {
+    //       sendMail(mailOptions)
+    //       console.log("Data inserted");
+    //     }
+    //   }
+    // );
+    //res.redirect("/login");
   });
 
 app

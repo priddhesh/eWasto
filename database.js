@@ -73,6 +73,21 @@ const creditPoints = async(user,points) =>{
     }
 }
 
+const checkCredits = async(referral,points) =>{
+    try {
+      console.log(referral + " "+ points);
+      const [data] = await pool.query(`SELECT * FROM users WHERE referral = ?`, [referral]);
+      let previousCredits = data[0].credits;
+      let email = data[0].email;
+      
+      console.log(data[0]);
+      await pool.query(`UPDATE  users SET credits = ? WHERE email = ?`, [previousCredits + points, email])
+  }
+  catch (err) {
+      console.log(err)
+  }
+}
+
 const getEmail = async(name,password)=>{
     try {
         const [data] = await pool.query(`SELECT email FROM users WHERE name = ? AND password = ?`,[name, password]);
@@ -100,6 +115,7 @@ module.exports ={
     checkCode,
     creditPoints,
     getEmail,
+    checkCredits,
     test
 }
 

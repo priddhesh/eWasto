@@ -1,29 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/styles/style.css">
+    <script defer src="/scripts/script.js"></script>
+    <title>Registration</title>
 </head>
+
 <body>
-    <form action="" method="post">
-        Username
-        <input type="text" name="username" id="username">
-        email
-        <input type="email" name="email" id="email">
-        contact
-        <input type="number" name="contact" id="contact">
-        password
-        <input type="password" name="password" id="password">
-        address
-        <input type="text" name="address" id="address">
-        X
-        <input type="text" name="X" id="X">  
-        Y
-        <input type="text" name="Y" id="Y">  
-        Pickup
-        <input type="number" name="pickup" id="pickup">    
-        <input type="submit" value="submit">
-    </form>
+    <div class="container d-flex justify-content-center align-items-center">
+        <div class="card">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form" id="userForm"> <!-- User Registration Form -->
+                        <h2>User Registration</h2>
+                        <form method="post">
+                            <div class="inputbox mt-3"> <span>Name</span> <input type="text"
+                                    placeholder="Enter Your Name" name="username" id="fname" class="form-control"
+                                    required> </div>
+                            <div class="inputbox mt-3"> <span>Email</span> <input type="email"
+                                    placeholder="Enter Your Email" name="email" id="email" class="form-control"
+                                    required> </div>
+                            <div class="inputbox mt-3"> <span>Phone</span> <input type="text"
+                                    placeholder="Enter Your Phone No." name="contact" id="phone" class="form-control"
+                                    required> </div>
+                            <div class="inputbox mt-3"> <span>Password</span> <input type="password"
+                                    placeholder="Enter Your Password" name="password" id="password" class="form-control"
+                                    required> </div>
+                            <div class="inputbox mt-3"> <span>Confirm Password</span> <input type="password"
+                                    placeholder="Confirm Password" name="confirmPassword" id="confirmPassword"
+                                    class="form-control" required> </div>
+                            <div class="inputbox mt-3"> <span>Referral Code</span> <input type="text"
+                                    placeholder="Referral code (if any)" name="referral" id="referral"
+                                    class="form-control"> </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="text-right"> <button class="btn btn-success register btn-block"
+                                        type="submit">Register</button> </div>
+                            </div>
+                            <div class="form-check mt-2"> <input class="form-check-input" type="checkbox" value=""
+                                    id="flexCheckChecked" checked> <label class="form-check-label"
+                                    for="flexCheckChecked"> I agree to the terms and conditions of <a href=""
+                                        class="login">Privacy & Policy</a> </label> </div>
+                        </form>
+                    </div>
+                    <div class="form" id="efacilityForm" style="display: none;">
+                        <!-- E-Facility Center Registration Form -->
+                        <h2>E-Facility Center Registration</h2>
+                        <!-- Add E-Facility Center registration fields here -->
+                        <form method="post">
+                            <div class="inputbox mt-3"> <span>Facility Name</span> <input type="text"
+                                    placeholder="Facility Name" name="username" class="form-control"> </div>
+                            <div class="inputbox mt-3"> <span>Email</span> <input type="text" placeholder="Email"
+                                    name="email" class="form-control"> </div>
+                            <div class="inputbox mt-3"> <span>Phone No</span> <input type="text" placeholder="Phone no"
+                                    name="contact" class="form-control"> </div>
+                            <div class="inputbox mt-3"> <span>Address</span> <input type="text" placeholder="Address"
+                                    name="address" class="form-control"> </div>
+                            <div class="inputbox mt-3"> <span>X</span> <input type="text" placeholder="X co-ordinates"
+                                    name="X" class="form-control" id="x"> </div>
+                            <div class="inputbox mt-3"> <span>Y</span> <input type="text" placeholder="Y co-ordinates"
+                                    id="y" name="Y" class="form-control"> </div>
+                            <div class="inputbox mt-3"> <span>PickUp</span> <input type="text" placeholder="PickUp"
+                                    name="pickup" class="form-control"> </div>
+                            <div class="inputbox mt-3"> <span>Password</span> <input type="text" placeholder="Password"
+                                    name="password" class="form-control"> </div>
+                            <div class="inputbox mt-3"> <span>Confirm Password</span> <input type="text"
+                                    placeholder="Confirm Password" name="confirmPassword" class="form-control"> </div>
+                            <!-- Add more E-Facility Center registration fields as needed -->
+                            <div class="d-flex justify-content-between align-items-center overflow-auto">
+                                <div class="text-right"> <button class="btn btn-success register btn-block"
+                                        type="submit">Register</button> </div>
+                                        
+                        </form>
+                    </div>
+                    <button onclick="fetchLocation()" type="button" class="btn btn-success">Fetch live location</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                    >
+                    Select on map
+                </button>
+                    <div class="form-check mt-2"> <input class="form-check-input" type="checkbox" value=""
+                            id="flexCheckChecked2" checked> <label class="form-check-label" for="flexCheckChecked2"> I
+                            agree to the terms and conditions of <a href="" class="login">Privacy & Policy</a> </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="text-center my-5"> <!-- Added my-5 class for vertical margin -->
+                    <img class="img-fluid mx-auto" src="https://www.homeappliancesworld.com/files/2016/09/E-waste.png"
+                        alt="E-Waste Image">
+                </div>
+            </div>
+
+        </div>
+        <div class="d-flex justify-content-center mt-3">
+            <button id="showUserForm" class="btn btn-success register btn-block mx-3">User</button>
+            <button id="showEfacilityForm" class="btn btn-success register btn-block">E-Facility Center</button>
+        </div>
+    </div>
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="successModalLabel">Registration Successful</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Thank you for registering. You can now <a href="login.html">log in</a> with your credentials.
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Select e-waste center location</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="map" style="height: 400px;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/gh/somanchiu/Keyless-Google-Maps-API@v6.0/mapsJavaScriptAPI.js" async
+        defer></script>
+    <script async defer>
+        let userX, userY;
+    let circle;
+
+    function showPosition(position) {
+      userX = parseFloat(position.coords.latitude);
+      userY = parseFloat(position.coords.longitude);
+      initMap();
+    }
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+    }
+    function initMap() {
+   
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 13,
+        center: { lat: userX, lng: userY },
+    });
+     const infoWindow = new google.maps.InfoWindow();
+
+     const marker = new google.maps.Marker({
+    position: { lat: userX, lng: userY }, // Replace with marker coordinates
+    map: map,
+    title: 'Marker Title', // Optional title for the marker
+    draggable: true, 
+  });
+      
+  google.maps.event.addListener(marker, 'dragend', function(event) {
+    // Get the updated marker position after dragging
+    const newLat = event.latLng.lat();
+    const newLng = event.latLng.lng();
+
+    // You can do something with the new coordinates here
+    document.getElementById("x").value = newLat;
+    document.getElementById("y").value = newLng;
+  });      
+    }
+    </script>
 </body>
+
 </html>
