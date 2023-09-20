@@ -43,33 +43,24 @@
             <a class="dropdown-item" href="#">500 KM</a>
           </div>
       </div>
-
+      <% let i=0; if(topThree.length>0)
+      {
+        topThree.forEach(function(item){
+        i++;
+        %>
       <div class="card" style="width: 18rem; margin: 4px;">
           <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <h5 class="card-title"><%=item.name%></h5>
+            <h6 class="card-subtitle mb-2 text-muted"><%=item.phone%></h6>
+            <p class="card-text"><%=item.address%></p>
             <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg1000">Recycle here</button>
           </div>
       </div>
-
-      <div class="card" style="width: 18rem; margin: 4px;">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModalCenter" style="display: none;">Success</button>
-          </div>
-      </div>
-
-      <div class="card" style="width: 18rem;margin: 4px;">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModalCenter1" style="display: none;">Success</button>
-          </div>
-      </div>
+      <% }) }else{ %>
+      <tr>
+          <td colspan="5">No data found</td>
+      </tr>
+      <% } %>
   </div>
   </div>
   <button type="button" id="btn-modal" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="display: none;">

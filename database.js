@@ -10,6 +10,25 @@ const pool = mysql.createPool({
     database: process.env.MYSQL_DATABASE
 }).promise();
 
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const radLat1 = (Math.PI * lat1) / 180;
+    const radLon1 = (Math.PI * lon1) / 180;
+    const radLat2 = (Math.PI * lat2) / 180;
+    const radLon2 = (Math.PI * lon2) / 180;
+  
+    const earthRadius = 6371; 
+  
+    const dLat = radLat2 - radLat1;
+    const dLon = radLon2 - radLon1;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(radLat1) * Math.cos(radLat2) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = earthRadius * c;
+  
+    return distance;
+}
+  
 const authenticate = async (phone, password, role) => {
     if (role === 'user') {
         try {
@@ -121,6 +140,33 @@ const locations = async () => {
     }
 }
 
+const nearestCenter = async (x,y)=>{
+    try{
+        const data = [];
+        const [centers] =  await pool.execute(`SELECT * from  eWasteCenter`);
+        
+        let i = 0;
+        let dist = [];
+        centers.forEach((center)=>{
+            let dx = center.X, dy = center.Y;
+            let distance = calculateDistance(x,y,dx,dy);
+            dist.push([distance,i]);
+            i++;
+        })
+        dist.sort((a, b) => a[0] - b[0]);
+        for(let k = 0;k<3;k++){
+            let name = centers[dist[k][1]].name;
+            let phone = centers[dist[k][1]].phone;
+            let address = centers[dist[k][1]].address;
+            let pathD = dist[k][0];
+            data.push({name,phone,address,pathD});
+        }
+        return data;
+    }catch{
+         return null;
+    }
+}
+
 module.exports ={
     authenticate,
     checkCode,
@@ -128,6 +174,7 @@ module.exports ={
     getEmail,
     checkCredits,
     locations,
+    nearestCenter,
     test
 }
 

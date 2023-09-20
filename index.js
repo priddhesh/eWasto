@@ -12,7 +12,13 @@ const ewasteCenter = require("./router/e-wasteCenter");
 
 const { generateReferral } = require("./scripts");
 
-const { authenticate, checkCode, checkCredits, locations } = require("./database");
+const {
+  authenticate,
+  checkCode,
+  checkCredits,
+  locations,
+  nearestCenter,
+} = require("./database");
 
 const { sendMail } = require("./nodeMailerConfig");
 
@@ -40,11 +46,9 @@ app.use(express.static("public"));
 app.use(express.json());
 app.set("view engine", "ejs");
 
-app
-  .route('/')
-  .get((req,res)=>{
-    res.render('Home');
-  })
+app.route("/").get((req, res) => {
+  res.render("Home");
+});
 
 app
   .route("/register")
@@ -69,44 +73,46 @@ app
       subject: "Successfully Registered",
       text: `Registered`,
     };
-    
-    if(req.body.address == undefined)
-    {
-    let referalCode = await generateReferral(10);
-    console.log(referalCode);
-    let val = true;
-    while(val!=false){
+
+    if (req.body.address == undefined) {
+      let referalCode = await generateReferral(10);
+      let val = true;
+      while (val != false) {
         val = await checkCode(referalCode);
-        if(val===true){
+        if (val === true) {
           referalCode = generateReferral(10);
         }
-    }
-
-    const credits = 0;
-    const referral_credits = 5;
-    pool.query(`INSERT INTO  users(email,phone,name,referral,credits,password) VALUES('${email}','${phone}','${name}','${referalCode}','${credits}','${password}')`, (err, rows) => {
-      if (err) throw err;
-      else {
-        sendMail(mailOptions)
-        console.log('Data inserted');
       }
-    });
-    
-    if(referral!=undefined){
-      await checkCredits(referral,referral_credits);
-    }
-    }else{
-      console.log(email + " "+ name+ " "+ phone + " "+ address + " "+ X + " " + Y + " " + pickup+" "+ status + " "+ password);
-      
-      pool.query(`INSERT INTO  eWasteCenter(email,name,phone,address,X,Y,pickup,status,password) VALUES('${email}','${name}','${phone}','${address}','${X}','${Y}','${pickup}','${status}','${password}')`, (err, rows) => {
-        if (err) throw err;
-        else {
-          sendMail(mailOptions)
-          console.log('Data inserted');
+
+      const credits = 0;
+      const referral_credits = 5;
+      pool.query(
+        `INSERT INTO  users(email,phone,name,referral,credits,password) VALUES('${email}','${phone}','${name}','${referalCode}','${credits}','${password}')`,
+        (err, rows) => {
+          if (err) throw err;
+          else {
+            sendMail(mailOptions);
+            console.log("Data inserted");
+          }
         }
-      });
+      );
+
+      if (referral != undefined) {
+        await checkCredits(referral, referral_credits);
+      }
+    } else {
+      pool.query(
+        `INSERT INTO  eWasteCenter(email,name,phone,address,X,Y,pickup,status,password) VALUES('${email}','${name}','${phone}','${address}','${X}','${Y}','${pickup}','${status}','${password}')`,
+        (err, rows) => {
+          if (err) throw err;
+          else {
+            sendMail(mailOptions);
+            console.log("Data inserted");
+          }
+        }
+      );
     }
-    res.redirect('/login');
+    res.redirect("/login");
 
     // pool.query(
     //   `INSERT INTO admin(email,phone,name,password) VALUES('${email}','${phone}','${name}','${password}')`,
@@ -142,21 +148,21 @@ app
     }
   });
 
-app
-  .route('/map')
-  .get(async (req, res) => {
-    const coOrdinates = await locations();
-    const tourStops = [];
-    coOrdinates.forEach(element => {
-      tourStops.push({
-        lat: parseFloat(element.X),
-        lng: parseFloat(element.Y),
-        name: "Boynton Pass"
-      });
+app.route("/map").get(async (req, res) => {
+  const coOrdinates = await locations();
+  const tourStops = [];
+  coOrdinates.forEach((element) => {
+    tourStops.push({
+      lat: parseFloat(element.X),
+      lng: parseFloat(element.Y),
+      name: "Boynton Pass",
     });
-    console.log(tourStops);
-    res.render('Map', { coOrdinates: tourStops });
   });
+  
+  let userX = 20.95103795297303,userY= 79.02647227712956;
+  const data = await nearestCenter(userX, userY);
+  res.render("Map", { coOrdinates: tourStops, topThree: data});
+});
 
 app.use("/admin", admin);
 app.use("/user", user);
