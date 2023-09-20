@@ -1,0 +1,43 @@
+#map {
+    height: 600px;
+    width:80%;
+    margin: 50px 4px 4px 4px;
+  }
+  /* Optional: Makes the sample page fill the window. */
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .dropdownshow a{
+    margin: 4px;
+    align-items: center;
+  }
+  .locator{
+    background-color: #5EC410;
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .divider:after,
+.divider:before {
+content: "";
+flex: 1;
+height: 1px;
+background: #eee;
+}
+.h-custom {
+height: calc(100% - 73px);
+}
+@media (max-width: 450px) {
+.h-custom {
+height: 100%;
+}
+
+.locator{
+  display: flex;
+  flex-direction: column;
+}
+}
