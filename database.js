@@ -110,12 +110,24 @@ const test = async() =>{
   }
 }
 
+const locations = async () => {
+    try {
+        const [data] = await pool.execute(`SELECT X,Y from  eWasteCenter`)
+        if (data.length > 0) return data
+        else return null
+    }
+    catch (err) {
+        console.log(err)
+    }
+}
+
 module.exports ={
     authenticate,
     checkCode,
     creditPoints,
     getEmail,
     checkCredits,
+    locations,
     test
 }
 

@@ -37,7 +37,7 @@
           <a class="btn btn-success dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Change Distance
           </a>         
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" onclick="test()">
             <a class="dropdown-item" href="#">50 KM</a>
             <a class="dropdown-item" href="#">200 KM</a>
             <a class="dropdown-item" href="#">500 KM</a>
@@ -49,7 +49,7 @@
             <h5 class="card-title">Card title</h5>
             <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <button type="button" class="btn btn-success">Success</button>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg1000">Recycle here</button>
           </div>
       </div>
 
@@ -58,7 +58,7 @@
             <h5 class="card-title">Card title</h5>
             <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <button type="button" class="btn btn-success">Success</button>
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModalCenter" style="display: none;">Success</button>
           </div>
       </div>
 
@@ -67,7 +67,7 @@
             <h5 class="card-title">Card title</h5>
             <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <button type="button" class="btn btn-success">Success</button>
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModalCenter1" style="display: none;">Success</button>
           </div>
       </div>
   </div>
@@ -81,18 +81,51 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="staticBackdropLabel">Request Rescue Team</h1>
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Center</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body" id="rescueTeamData">
+        <div class="modal-body" id="center">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Continue</button>
+          <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg1000">Recycle here</button>
         </div>
       </div>
     </div>
   </div>
+
+
+    <div class="modal fade bd-example-modal-lg1000" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Login</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="mb-3">
+                  <label for="exampleInputEmail1" class="form-label">Email address</label>
+                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                  <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+                <div class="mb-3">
+                  <label for="exampleInputPassword1" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="exampleInputPassword1">
+                </div>
+                <div class="mb-3 form-check">
+                  <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                  <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/gh/somanchiu/Keyless-Google-Maps-API@v6.0/mapsJavaScriptAPI.js" async defer></script>
@@ -119,23 +152,21 @@
       coOrdinates.forEach(element => {
         tourStops.push([{ lat: parseFloat(element.lat), lng: parseFloat(element.lng) }, `${element.name} Phone No:${phone_no}`, false]);
       });
-      console.log(tourStops);
 
       const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 18,
+        zoom: 14,
         center: { lat: userX, lng: userY },
       });
 
       const infoWindow = new google.maps.InfoWindow();
 
-      tourStops.forEach(([position, title, draggable], i) => {
+      tourStops.forEach(([position, title], i) => {
         const marker = new google.maps.Marker({
           position,
           map,
           title: `${i + 1}. ${title}`,
           label: `${i + 1}`,
           optimized: false,
-          draggable: draggable,
         });
 
         marker.addListener("click", () => {
@@ -143,14 +174,6 @@
           infoWindow.setContent(marker.getTitle());
           infoWindow.open(marker.getMap(), marker);
         });
-
-        if (draggable) {
-          marker.addListener("dragend", () => {
-            const newPosition = marker.getPosition();
-            console.log(`Lat ${newPosition.lat()}, Lng ${newPosition.lng()}`);
-            circle.setCenter(newPosition);
-          });
-        }
       });
 
       circle = new google.maps.Circle({
@@ -179,8 +202,9 @@
             modalButton.click();
             }
       })
-      document.getElementById("rescueTeamData").innerHTML =  `<b>${document.getElementsByClassName("gm-style-iw-d")[0].textContent}</b>`;
+      document.getElementById("center").innerHTML =  `<b>${document.getElementsByClassName("gm-style-iw-d")[0].textContent}</b>`;
     })
+    
   </script>
 </body>
 

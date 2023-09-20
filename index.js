@@ -12,7 +12,7 @@ const ewasteCenter = require("./router/e-wasteCenter");
 
 const { generateReferral } = require("./scripts");
 
-const { authenticate, checkCode, checkCredits } = require("./database");
+const { authenticate, checkCode, checkCredits, locations } = require("./database");
 
 const { sendMail } = require("./nodeMailerConfig");
 
@@ -140,6 +140,22 @@ app
       console.log("fail");
       res.redirect("/login");
     }
+  });
+
+app
+  .route('/map')
+  .get(async (req, res) => {
+    const coOrdinates = await locations();
+    const tourStops = [];
+    coOrdinates.forEach(element => {
+      tourStops.push({
+        lat: parseFloat(element.X),
+        lng: parseFloat(element.Y),
+        name: "Boynton Pass"
+      });
+    });
+    console.log(tourStops);
+    res.render('Map', { coOrdinates: tourStops });
   });
 
 app.use("/admin", admin);
