@@ -4,7 +4,7 @@ const mysql = require("mysql2");
 const centerAuth = require("./e-wasterCenterAuth");
 const moment = require("moment");
 const { sendMail } = require("../nodeMailerConfig");
-const {test}  = require("../database");
+const {test, pickupBoyDetails}  = require("../database");
 
 const conn = mysql.createConnection({
   host: process.env.MYSQL_URI,
@@ -49,20 +49,32 @@ router.route("/addPickUpBoy").post((req,res)=>{
   res.redirect('/e-waste-center/dashboard');
 })
 
-router.route("/approveOrder").post((req,res) =>{
+router.route("/approveOrder").post(async (req,res) =>{
   let email = req.body.email;
+  let phonePB = req.body.phone;
+
    
   const randomNumber = Math.floor(Math.random() * 1000000);
   const OTP = String(randomNumber).padStart(6, '0');
+  const pBDetails = await pickupBoyDetails(phonePB);
+  
+  let namePB = pBDetails[0].name;
+  let phoneNo = pBDetails[0].phone;
+  let emailID = pBDetails[0].email;
 
-  conn.query(`UPDATE recycling_items SET status = 0 , otp = '${OTP}' WHERE email = '${email}'`, (err, rows) => {
+  conn.query(`UPDATE recycling_items SET status = 0 , otp = '${OTP}', phonePB = '${phonePB}' WHERE email = '${email}'`, (err, rows) => {
     if (err) throw err;
     else {
       var mailOptions = {
         from: process.env.EMAIL,
         to: `${email}`,
         subject: "Your order approved",
-        text: `OTP : ${OTP}`,
+        text: `OTP : ${OTP}
+        Details of pickup boy:
+        Name : ${namePB}
+        Phone : ${phoneNo}
+        email : ${emailID}
+        Please keep the OTP confidential`,
       };
       sendMail(mailOptions);
       console.log('Data updated');

@@ -2,6 +2,7 @@ require('dotenv').config();
 const mysql = require('mysql2');
 const dotenv = require('dotenv');
 const moment = require('moment');
+const e = require('express');
 
 const pool = mysql.createPool({
     host: process.env.MYSQL_URI,
@@ -54,7 +55,20 @@ const authenticate = async (phone, password, role) => {
         catch (err) {
             console.log(err)
         }
-    }else {
+    }else if(role === 'pickupboy'){
+        try {
+            const [data] = await pool.query(`SELECT * FROM pickup_boys WHERE phone = ? AND password = ?`, [phone, password])
+
+
+            if (data.length > 0) return data; // user found
+            else return false // user not found
+
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
+    else {
         try {
             const [data] = await pool.query(`SELECT * FROM eWasteCenter WHERE phone = ? AND password = ?`, [phone, password])
             if (data.length > 0) return data; // user found
@@ -110,7 +124,16 @@ const checkCredits = async(referral,points) =>{
 const getEmail = async(name,password)=>{
     try {
         const [data] = await pool.query(`SELECT email FROM users WHERE name = ? AND password = ?`,[name, password]);
-        
+        return data;
+    }
+    catch (err) {
+        console.log(err)
+    }
+}
+
+const getAdminEmail  = async(uname,pwd)=>{
+    try {
+        const [data] = await pool.query(`SELECT email FROM admin WHERE name = ? AND password = ?`,[uname, pwd]);
         return data;
     }
     catch (err) {
@@ -167,14 +190,94 @@ const nearestCenter = async (x,y)=>{
     }
 }
 
+const getBlogs = async() =>{
+    try{
+       const [data]  = await pool.execute(`SELECT * from  blogs`);
+       return data;
+    }catch(err){
+       console.log(err);
+    }
+}
+
+const getBlogsRequest = async() =>{
+    try{
+       const [data]  = await pool.execute(`SELECT * from  blogs WHERE status = -1`);
+       return data;
+    }catch(err){
+       console.log(err);
+    }
+}
+
+const pickupBoyDetails = async(phonePB)=>{
+    try{
+       const [data] = await pool.execute(`SELECT * FROM pickup_boys WHERE phone = ?`, [phonePB]);
+       return data;
+    }catch(err){
+        console.log(err);
+    }
+} 
+
+const getOrders = async(phone)=>{
+    try{
+        const [data] = await pool.execute(`SELECT * FROM recycling_items WHERE phonePB = ? AND status = 0`, [phone]);
+        return data;
+     }catch(err){
+         console.log(err);
+     }
+}
+
+const getPhone = async(user,password)=>{
+    try{
+        const [data] = await pool.execute(`SELECT phone FROM pickup_boys WHERE name = ? AND password = ?`, [user,password]);
+
+        return data;
+     }catch(err){
+         console.log(err);
+     }
+}
+
+const assignCredits = async (email,credits)=>{
+    try{
+        const [data] = await pool.execute(`SELECT credits FROM users WHERE email = ?`,[email]);
+        
+        let previousCredits = data[0].credits;
+
+        await pool.execute(`UPDATE users SET credits = ? WHERE email = ?`,[credits + previousCredits,email]);
+    }catch(err){
+        console.log(err);
+    }
+};
+
+const confirmOrder = async (OTP,email,credits) =>{
+    try {
+        await pool.execute(`UPDATE recycling_items SET status = 1 WHERE email = ? AND otp = ?`,[email,OTP]);
+        
+        const [data] = await pool.execute(`SELECT * FROM recycling_items WHERE status = 1 AND email = ? AND otp = ?`,[email,OTP]);
+
+        if (data.length > 0){
+           await assignCredits(email,credits);
+        }
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports ={
     authenticate,
     checkCode,
     creditPoints,
     getEmail,
+    getAdminEmail,
     checkCredits,
     locations,
     nearestCenter,
+    getBlogs,
+    getBlogsRequest,
+    pickupBoyDetails,
+    getOrders,
+    getPhone,
+    confirmOrder,
     test
 }
 

@@ -30,17 +30,23 @@ router.route("/placeRequest").post(async (req,res)=>{
   let user = req.session.username;
   user = user.replace(/"/g, '');
   let password = req.session.password;
-  password = user.replace(/"/g, '');
+  password = password.replace(/"/g, '');
+  let [data] = await getEmail(user,password);
+  let email = data.email;
 
-  let data = await getEmail(user,password);
-  let email = data[0].email;
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = String(currentDate.getMonth() + 1).padStart(2,"0");
+  const day = String(currentDate.getDate()).padStart(2, "0");
+
+  const date = `${year}-${month}-${day}`;
   
   // let company = req.body.company;
   // let model = req.body.model;
   // let price = req.body.price;
   // let type = req.body.type;
 
-  conn.query(`INSERT INTO recycling_items(email,company,model,price,type,status,otp) VALUES('${email}','test','test','100','pickup',-1,'')`, (err, rows) => {
+  conn.query(`INSERT INTO recycling_items(email,company,model,price,type,status,otp,phonePB,date) VALUES('${email}','test','test','100','pickup',-1,'',0,'${date}')`, (err, rows) => {
     if (err) throw err;
     else {
       console.log('Data updated');

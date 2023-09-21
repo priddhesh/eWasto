@@ -17,6 +17,11 @@
     </form>
     <div id="google_element"></div>
     <script src="http://translate.google.com/translate_a/element.js?cb=loadGoogleTranslate"></script>
+
+    <form action="/admin/publishBlog" method="post">
+        <input type="text" name="blog" id="blog">
+        <input type="submit" value="publish">
+    </form>
     <script>
         function loadGoogleTranslate(){
             new google.translate.TranslateElement("google_element");

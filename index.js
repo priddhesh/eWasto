@@ -7,6 +7,8 @@ const mysql = require("mysql2");
 
 const admin = require("./router/admin");
 const user = require("./router/user");
+const pickupboy = require("./router/pickupboy");
+
 const ewasteCenter = require("./router/e-wasteCenter");
 // const { authenticate, pool } = require('./database')
 
@@ -18,6 +20,7 @@ const {
   checkCredits,
   locations,
   nearestCenter,
+  getBlogs,
 } = require("./database");
 
 const { sendMail } = require("./nodeMailerConfig");
@@ -158,14 +161,41 @@ app.route("/map").get(async (req, res) => {
       name: "Boynton Pass",
     });
   });
-  
-  let userX = 20.95103795297303,userY= 79.02647227712956;
+
+  let userX = 20.95103795297303,
+    userY = 79.02647227712956;
   const data = await nearestCenter(userX, userY);
-  res.render("Map", { coOrdinates: tourStops, topThree: data});
+  res.render("Map", { coOrdinates: tourStops, topThree: data });
 });
+
+app.route("/blogs").get(async (req, res) => {
+  let blogs = await getBlogs();
+  res.render("Blogs", { blogs: blogs });
+});
+
+app
+  .route("/pickupboy-login")
+  .get(async (req, res) => {
+    res.render("PBlogin");
+  })
+  .post(async (req, res) => {
+    var { phone, password } = req.body;
+    const result = await authenticate(phone, password,"pickupboy");
+    if (result != false) {
+      req.session.username = JSON.stringify(result[0].name);
+      req.session.password = JSON.stringify(result[0].password);
+      req.session.role = "pickupboy";
+  
+      res.redirect("/pickupboy/dashboard");
+    } else {
+      res.redirect("/pickupboy-login");
+    }
+  });
 
 app.use("/admin", admin);
 app.use("/user", user);
+app.use("/pickupboy", pickupboy);
+
 app.use("/e-waste-center", ewasteCenter);
 
 app.listen("5000", () => {
