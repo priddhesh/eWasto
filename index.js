@@ -99,8 +99,7 @@ app
           }
         }
       );
-
-      if (referral != undefined) {
+      if (referral.length!=0) {
         await checkCredits(referral, referral_credits);
       }
     } else {
@@ -151,7 +150,10 @@ app
     }
   });
 
-app.route("/map").get(async (req, res) => {
+app
+  .route("/map")
+  .get(async (req, res) => {
+  let role = req.session.role;
   const coOrdinates = await locations();
   const tourStops = [];
   coOrdinates.forEach((element) => {
@@ -160,13 +162,12 @@ app.route("/map").get(async (req, res) => {
       lng: parseFloat(element.Y),
       name: "Boynton Pass",
     });
-  });
-
+  })
   let userX = 20.95103795297303,
     userY = 79.02647227712956;
   const data = await nearestCenter(userX, userY);
-  res.render("Map", { coOrdinates: tourStops, topThree: data });
-});
+  res.render("Map", { coOrdinates: tourStops, topThree: data,role : role });
+})
 
 app.route("/blogs").get(async (req, res) => {
   let blogs = await getBlogs();
@@ -189,6 +190,30 @@ app
       res.redirect("/pickupboy/dashboard");
     } else {
       res.redirect("/pickupboy-login");
+    }
+  });
+
+app
+  .route("/verifyForSell")
+  .post(async (req,res)=>{
+    let company = req.body.company;
+    let phone  = req.body.cPhone;
+    let uphone = req.body.phone;
+    let password = req.body.password;
+    
+    if(company==undefined || phone==undefined || uphone.length==0 || password.length== 0){
+      res.redirect("/map");
+    }
+    const result = await authenticate(uphone, password, "user");
+    if (result.length===1) {
+      req.session.username = JSON.stringify(result[0].name);
+      req.session.password = JSON.stringify(result[0].password);
+      req.session.role = "user";
+      req.session.company = company;
+      req.session.phone = phone;
+      res.redirect("/user/sell");
+    }else{
+      res.redirect("/map");
     }
   });
 

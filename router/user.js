@@ -55,9 +55,30 @@ router.route("/placeRequest").post(async (req,res)=>{
   res.redirect("/user/dashboard");
 });
 
+router.route("/sell")
+.get((req,res)=>{
+  let company = req.session.company;
+  let phone = req.session.phone;
+  if(req.session.role!="user" || company==undefined || phone==undefined || company.length==0 || phone.length==0)
+  {
+  res.redirect("/map");
+  }else{
+    res.render("Sell",{company:company,phone:phone});
+  }
+})
+.post((req,res)=>{
+  let company = req.body.center;
+  let phone  = req.body.phone;
+  if(company==undefined || phone==undefined){
+    res.redirect("/map");
+  }
+  res.render("Sell",{company:company,phone:phone});
+});
+
 router.route("/logout").get((req, res) => {
   req.session.destroy();
   res.redirect("/");
 });
+
 
 module.exports = router;

@@ -20,8 +20,10 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.6.1",
     "node-geolocation": "^1.15.14",
+    "node-localstorage": "^3.0.5",
     "nodemailer": "^6.9.5",
     "nodemon": "^3.0.1",
+    "puppeteer": "^21.3.3",
     "session": "^0.1.0"
   }
 }

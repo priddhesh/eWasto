@@ -14,7 +14,7 @@
 </head>
 
 <body>
-
+  <h1 id="role" style="display: none;"><%= role %></h1>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="#">Navbar</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,7 +53,11 @@
             <h5 class="card-title"><%=item.name%></h5>
             <h6 class="card-subtitle mb-2 text-muted"><%=item.phone%></h6>
             <p class="card-text"><%=item.address%></p>
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg1000">Recycle here</button>
+            <form id="submit" action="/user/sell" method="post">
+            <input style="display: none;" type="text" name="center" id="center" value="nit">
+            <input value="phone" style="display: none;" type="text" name="phone" id="phone">
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg1000" onclick="verify()">Recycle here</button>
+          </form>
           </div>
       </div>
       <% }) }else{ %>
@@ -86,7 +90,7 @@
   </div>
 
 
-    <div class="modal fade bd-example-modal-lg1000" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel1"
+    <div id="centerModal" class="modal fade bd-example-modal-lg1000" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel1"
     aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -97,22 +101,17 @@
                 </button>
             </div>
             <div class="modal-body">
-              <form>
                 <div class="mb-3">
-                  <label for="exampleInputEmail1" class="form-label">Email address</label>
-                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                  <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                  <form action="/verifyForSell" method="post">
+                    <input style="display: none;" type="text" value="company" name="company" id="company">
+                    <input style="display: none;" type="text" value="phone" name="cPhone" id="cPhone">
+                    <h4>Phone:</h4>
+                    <input type="text" name="phone" id="phone">
+                    <h4>Password:</h4>
+                    <input type="password" name="password" id="password">
+                    <input type="submit" value="submit">
+                  </form>
                 </div>
-                <div class="mb-3">
-                  <label for="exampleInputPassword1" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="exampleInputPassword1">
-                </div>
-                <div class="mb-3 form-check">
-                  <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                  <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-              </form>
             </div>
         </div>
     </div>
@@ -196,6 +195,13 @@
       document.getElementById("center").innerHTML =  `<b>${document.getElementsByClassName("gm-style-iw-d")[0].textContent}</b>`;
     })
     
+  </script>
+  <script defer>
+    function verify(){
+     if(document.getElementById("role").innerText=="user"){
+      document.getElementById("submit").submit();
+     };
+    }
   </script>
 </body>
 
