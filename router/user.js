@@ -55,6 +55,7 @@ router.route("/placeRequest").post(async (req,res)=>{
   res.redirect("/user/dashboard");
 });
 
+//for selection of electronic items
 router.route("/sell")
 .get((req,res)=>{
   let company = req.session.company;
