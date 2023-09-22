@@ -4,9 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="/scripts/script.js" defer></script>
+    <link rel="stylesheet" href="/styles/toast.css">
 </head>
 <body>
     <h1><%= company %></h1>
     <h1><%= phone %></h1>
+
+    <div style="left: 20px; bottom: 20px;" class="toast" id="ewasteLocatorToast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="10000">
+        <div class="toast-header">
+            <strong class="mr-auto">We Appreciate Your Commitment to E-Waste Recycling!</strong>
+        </div>
+        <div class="toast-body">
+          Your decision to recycle e-waste is a step towards a greener, healthier planet. Together, we're making a difference in reducing electronic waste and protecting our environment. You should be proud!
+        </div>
+      </div>
 </body>
 </html>

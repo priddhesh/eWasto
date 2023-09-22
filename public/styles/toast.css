@@ -1,0 +1,19 @@
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #4CAF50; /* Green background color */
+    color: #fff; /* White text color */
+    border-radius: 10px;
+    width: 300px;
+    font-family: Arial, sans-serif; /* Choose an attractive font-family */
+}
+.toast-header {
+    background-color: #388E3C; /* Darker green background for header */
+    color: #fff; /* White text color for header */
+    border-radius: 10px 10px 0 0;
+}
+.close {
+    color: #fff; /* White close button color */
+}
+
