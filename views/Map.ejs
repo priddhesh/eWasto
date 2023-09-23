@@ -52,13 +52,14 @@
         %>
       <div class="card" style="width: 18rem; margin: 4px;">
           <div class="card-body">
-            <h5 class="card-title"><%=item.name%></h5>
-            <h6 class="card-subtitle mb-2 text-muted"><%=item.phone%></h6>
-            <p class="card-text"><%=item.address%></p>
-            <form id="submit" action="/user/sell" method="post">
-            <input style="display: none;" type="text" name="center" id="center" value="nit">
-            <input value="phone" style="display: none;" type="text" name="phone" id="phone">
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg1000" onclick="verify()">Recycle here</button>
+            <h5 id="centerS<%=i%>" class="card-title"><%=item.name%></h5>
+            <h6 id="phoneS<%=i%>" class="card-subtitle mb-2 text-muted"><%=item.phone%></h6>
+            <p id="addressS<%=i%>" class="card-text"><%=item.address%></p>
+            <form id="form<%=i%>" action="/user/sell" method="post">
+            <input style="display: none;" type="text" name="center" id="center<%=i%>">
+            <input style="display: none;" type="text" name="phone" id="phone<%=i%>">
+            <input style="display: none;" type="text" name="address" id="address<%=i%>">
+            <button id="<%=i%>" type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-lg1000" onclick="verify(this.id)">Recycle here</button>
           </form>
           </div>
       </div>
@@ -105,8 +106,9 @@
             <div class="modal-body">
                 <div class="mb-3">
                   <form action="/verifyForSell" method="post">
-                    <input style="display: none;" type="text" value="company" name="company" id="company">
-                    <input style="display: none;" type="text" value="phone" name="cPhone" id="cPhone">
+                    <input style="display: none;" type="text" name="cCompany" id="cCompany">
+                    <input style="display: none;" type="text" name="cPhone" id="cPhone">
+                    <input style="display: none;" type="text" name="cAddress" id="cAddress">
                     <h4>Phone:</h4>
                     <input type="text" name="phone" id="phone">
                     <h4>Password:</h4>
@@ -208,10 +210,19 @@
     
   </script>
   <script defer>
-    function verify(){
+    function verify(id){
      if(document.getElementById("role").innerText=="user"){
-      document.getElementById("submit").submit();
+      document.getElementById(`form${id}`).submit();
      };
+    }
+
+    for(let i = 1;i<=3;i++){
+      document.getElementById(`center${i}`).value = document.getElementById(`centerS${i}`).innerText;
+      document.getElementById(`phone${i}`).value = document.getElementById(`phoneS${i}`).innerText;
+      document.getElementById(`address${i}`).value = document.getElementById(`addressS${i}`).innerText;
+      document.getElementById(`cCompany`).value = document.getElementById(`centerS${i}`).innerText;
+      document.getElementById(`cPhone`).value = document.getElementById(`phoneS${i}`).innerText;
+      document.getElementById(`cAddress`).value = document.getElementById(`addressS${i}`).innerText;
     }
   </script>
 </body>

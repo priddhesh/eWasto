@@ -137,7 +137,10 @@ app
   .post(async (req, res) => {
     var { phone, password, role } = req.body;
     const result = await authenticate(phone, password, role);
-    if (result != false) {
+    if(result==null){
+      res.redirect("/login");
+    }
+    else if (result.length>0) {
       req.session.username = JSON.stringify(result[0].name);
       req.session.password = JSON.stringify(result[0].password);
       req.session.role = role;
@@ -145,7 +148,6 @@ app
       else if (role === "admin") res.redirect("/admin/dashboard");
       else res.redirect("/e-waste-center/dashboard");
     } else {
-      console.log("fail");
       res.redirect("/login");
     }
   });
@@ -196,8 +198,9 @@ app
 app
   .route("/verifyForSell")
   .post(async (req,res)=>{
-    let company = req.body.company;
+    let company = req.body.cCompany;
     let phone  = req.body.cPhone;
+    let address = req.body.cAddress;
     let uphone = req.body.phone;
     let password = req.body.password;
     
@@ -211,6 +214,7 @@ app
       req.session.role = "user";
       req.session.company = company;
       req.session.phone = phone;
+      req.session.address = address;
       res.redirect("/user/sell");
     }else{
       res.redirect("/map");
