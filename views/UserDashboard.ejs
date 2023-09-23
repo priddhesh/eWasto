@@ -149,8 +149,14 @@
                     <td class="bg-warning">Approved</td>
                 <% } else if (item.status === -1) { %>  
                     <td class="bg-warning">Pending</td>
-                <% } %>                
-                <td><button type="button" class="btn btn-outline-danger btn-lg">Cancel</button></td>
+                <% } %>  
+                <% if (item.status === -1 || item.status === 0) { %>
+                  <td>
+                    <button type="button" class="btn btn-outline-danger btn-lg">Cancel</button>
+                  </td>
+                <% } else { %>  
+                  <td >Cannot cancel</td>
+                <% } %>           
               </tr>
               <% }) }else{ %>
                 <tr>
