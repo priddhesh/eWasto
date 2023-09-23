@@ -53,9 +53,29 @@
                     class="rounded-circle img-fluid" style="width: 150px;">
                   <h5 class="my-3"><%= user.name %></h5>
                   <div class="d-flex justify-content-center mb-2">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal2">
-                        Write blog
-                    </button>
+                    <!-- Button trigger modal -->
+<button type="button" class="btn btn-outline-success ms-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Write Blog
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <textarea name="writeblog" id="writeblog" cols="40" rows="10"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
                   </div>
                 </div>
               </div>
@@ -149,20 +169,20 @@
                     <td class="bg-warning">Approved</td>
                 <% } else if (item.status === -1) { %>  
                     <td class="bg-warning">Pending</td>
-                <% } %>  
+                <% } %>                
                 <% if (item.status === -1 || item.status === 0) { %>
                   <td>
                     <button type="button" class="btn btn-outline-danger btn-lg">Cancel</button>
                   </td>
                 <% } else { %>  
-                  <td >Cannot cancel</td>
-                <% } %>           
+                  <td class="">Cannot cancel</td>
+                <% } %>
               </tr>
               <% }) }else{ %>
                 <tr>
                   <td colspan="5">No requests found</td>
                 </tr>
-                <% } %>
+              <% } %>
             </tbody>
           </table>
      </div>
