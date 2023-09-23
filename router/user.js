@@ -3,7 +3,7 @@ const router = express.Router();
 const mysql = require("mysql2");
 const userAuth = require("./userAuth");
 const moment = require("moment");
-const {creditPoints, getEmail} = require('../database');
+const {creditPoints, getEmail, userData, userRequests } = require('../database');
 
 const conn = mysql.createConnection({
   host: process.env.MYSQL_URI,
@@ -14,8 +14,14 @@ const conn = mysql.createConnection({
 
 router.use(userAuth);
 
-router.route("/dashboard").get((req, res) => {
-  res.render("UserDashboard");
+router.route("/dashboard").get(async (req, res) => {
+  let name =  req.session.username;
+  name = name.replace(/"/g, '');
+  let password =  req.session.password;
+  password = password.replace(/"/g, '');
+  let [data] = await userData(name,password);
+  let requests = await userRequests(name,password);
+  res.render("UserDashboard", {user:data,requests: requests});
 });
 
 router.route("/creditPoints").post(async (req,res)=>{
