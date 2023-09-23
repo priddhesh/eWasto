@@ -10,7 +10,7 @@
     <title>Document</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav style="background-color: #5EC410;" class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Navbar</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
@@ -41,6 +41,9 @@
                     </li>
                 </ul>
             </div>
+            <a style="margin-left: 50%;" href="/user/logout" class="btn btn-danger float-lg-right btn-sm">Logout</a>
+      <span style="background-color: rgb(139, 232, 232); border-radius: 10px;font-weight: bold;"
+        class="float-lg-right px-2 p-1 mx-3">Welcome <%=user.name%>!</span>
         </div>
        
     </nav>

@@ -82,10 +82,12 @@ router.route("/sell")
   res.render("Sell",{company:company,phone:phone});
 });
 
-router.route("/logout").get((req, res) => {
-  req.session.destroy();
-  res.redirect("/");
-});
+router
+  .route('/logout')
+  .get((req, res) => {
+    req.session.destroy()
+    res.redirect('/')
+  })
 
 
 module.exports = router;
