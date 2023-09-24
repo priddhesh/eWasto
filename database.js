@@ -326,6 +326,32 @@ const userRequests = async (name, password) => {
   }
 };
 
+const getCenter = async (phone,password) =>{
+  try {
+    const [data] = await pool.query(
+      `SELECT * FROM ewastecenter WHERE phone = ? AND password = ?`,
+      [phone, password]
+    );
+
+    if (data.length > 0) return data; // user found
+    else return false; // user not found
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const getPickUpBoyNames = async (center)=>{
+  try {
+    const [data] = await pool.execute(
+      `SELECT * FROM pickup_boys WHERE center = ?`,
+      [center]
+    );
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 module.exports = {
   authenticate,
   checkCode,
@@ -343,5 +369,7 @@ module.exports = {
   getPhone,
   userRequests,
   confirmOrder,
+  getCenter,
+  getPickUpBoyNames,
   test,
 };

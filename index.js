@@ -143,6 +143,7 @@ app
     else if (result.length>0) {
       req.session.username = JSON.stringify(result[0].name);
       req.session.password = JSON.stringify(result[0].password);
+      req.session.phone = JSON.stringify(result[0].phone);
       req.session.role = role;
       if (role === "user") res.redirect("/user/dashboard");
       else if (role === "admin") res.redirect("/admin/dashboard");
