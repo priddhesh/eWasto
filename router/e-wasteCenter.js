@@ -53,20 +53,17 @@ router.route("/addPickUpBoy").post((req,res)=>{
 })
 
 router.route("/approveOrder").post(async (req,res) =>{
-  let email = req.body.email;
   let phonePB = req.body.pbPhone;
   let cemail = req.body.cemail;
   let camount = req.body.camount;
   let cdate = req.body.cdate;
   let caddr = req.body.caddr;
-  console.log(phonePB);
   const randomNumber = Math.floor(Math.random() * 1000000);
   const OTP = String(randomNumber).padStart(6, '0');
   const pBDetails = await pickupBoyDetails(phonePB);
   let namePB = pBDetails[0].name;
   let phoneNo = pBDetails[0].phone;
   let emailID = pBDetails[0].email;
-  console.log(cdate);
   
   conn.query(`UPDATE recycling_items SET status = 0 , otp = '${OTP}', phonePB = '${phonePB}' WHERE email = '${cemail}' AND price = '${camount}' AND date = '${cdate}' AND address='${caddr}'`, (err, rows) => {
     if (err) throw err;
