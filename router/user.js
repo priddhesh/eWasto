@@ -39,6 +39,12 @@ router.route("/placeRequest").post(async (req,res)=>{
   password = password.replace(/"/g, '');
   let [data] = await getEmail(user,password);
   let email = data.email;
+  let address = req.body.address;
+  let state = req.body.state;
+  let zip = req.body.zip;
+  let items = req.body.items;   
+  let price = req.body.price;
+  let cPhone = req.body.cPhone;
 
   const currentDate = new Date();
   const year = currentDate.getFullYear();
@@ -46,13 +52,8 @@ router.route("/placeRequest").post(async (req,res)=>{
   const day = String(currentDate.getDate()).padStart(2, "0");
 
   const date = `${year}-${month}-${day}`;
-  
-  // let company = req.body.company;
-  // let model = req.body.model;
-  // let price = req.body.price;
-  // let type = req.body.type;
 
-  conn.query(`INSERT INTO recycling_items(email,company,model,price,type,status,otp,phonePB,date) VALUES('${email}','test','test','100','pickup',-1,'',0,'${date}')`, (err, rows) => {
+  conn.query(`INSERT INTO recycling_items(email,items,price,address,state,zip,type,status,otp,phonePB,date,cPhone) VALUES('${email}','${items}','${price}','${address}','${state}','${zip}','pickup',-1,'',0,'${date}','${cPhone}')`, (err, rows) => {
     if (err) throw err;
     else {
       console.log('Data updated');
@@ -90,6 +91,7 @@ router
   .route('/checkout')
   .post(async (req,res)=>{
       let items = req.body.items;
+      let cPhone = req.body.cPhone;
       let user = req.session.username;
       let password = req.session.password;
       user = user.replace(/"/g, '');
@@ -97,7 +99,7 @@ router
       let [data] = await getEmail(user,password);
       let email = data.email;
       items = JSON.parse(items);
-      res.render("Checkout",{name:user,email:email,items:items});
+      res.render("Checkout",{name:user,email:email,items:items,cPhone:cPhone});
   })
   .get((req,res)=>{
     res.render("Checkout");

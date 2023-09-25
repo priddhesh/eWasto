@@ -67,7 +67,7 @@ app
     let X = req.body.X;
     let Y = req.body.Y;
     let pickup = req.body.pickup;
-    let status = 0;
+    let status = -1;
     let referral = req.body.referral;
 
     var mailOptions = {

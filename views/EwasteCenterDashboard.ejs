@@ -126,42 +126,59 @@
     </div>
   </div>
 
-
-
   <div class="d-flex flex-row mb-3 justify-content-center">
     <table id="userTable" class="table table-hover">
       <thead>
         <tr class="table-info">
-          <th scope="col">Sr.No.</th>
-          <th scope="col">Name</th>
-          <th scope="col">Email Id</th>
-          <th scope="col">Phone No.</th>
-          <th scope="col">Address</th>
-          <th scope="col">E-Waste Details</th>
-          <th scope="col">Status</th>
-
+          <tr class="table-info">
+            <th scope="col">Sr.No.</th>
+            <th scope="col">Email</th>
+            <th scope="col">Items</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Address</th>
+            <th scope="col">Date</th>
+            <th scope="col">Status</th>
+            <th scope="col">Action</th>
+          </tr>
         </tr>
       </thead>
       <tbody>
-        <tr class="table-info">
-          <td>1</td>
-          <td>Anirudh Verma</td>
-          <td>E-Waste</td>
-          <td>567890</td>
-          <td>hjwebveverfcwebvwrkj</td>
-          <td>
-            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#blogContent">Assign
-              Pickup Boy</button>
-          </td>
-          <td>
-            <button type="button" class="btn btn-success btn-lg">Accepted</button>
-            <button type="button" class="btn btn-danger btn-lg">Declined</button>
-          </td>
+        <% let i=0%>
+            <% if(requests.length>0) { requests.forEach(function(item){ i++; %>
+              <tr class="table-info">
+                <th scope="row"><%= i%></th>
+                <td style="display: none;" id="dummy<%=i%>"><%= item.items%></td>
+                <td id="email<%=i%>"><%= item.email%></td>
+                <td id="items<%=i%>"></td>
+                <td id="total<%=i%>"><%= item.price%></td>
+                <td id="addr<%=i%>"><%= item.address%></td>
+                <td id="date<%=i%>""><%= item.date.toString().substring(0,15) %></td>
+                <% if (item.status === 1) { %>
+                    <td class="bg-warning">Delivered</td>
+                <% } else if (item.status === 0) { %>  
+                    <td class="bg-warning">Approved</td>
+                <% } else if (item.status === -1) { %>  
+                    <td class="bg-warning">Pending</td>
+                <% } %>                
+                <% if (item.status === -1 || item.status === 0) { %>
+                  <td>
+                    <button id="<%=i%>" onclick="details(this.id)" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#blogContent">Assign
+                      Pickup Boy</button>
+                  </td>
+                <% } else { %>  
+                  <td class="">Cannot cancel</td>
+                <% } %>
+              </tr>
+              <% }) }else{ %>
+                <tr>
+                  <td colspan="5">No requests found</td>
+                </tr>
+              <% } %>
         </tr>
       </tbody>
     </table>
   </div>
-
+  <h1 id="count" style="display: none;"><%=i%></h1>
   <div>
     <div style="display: flex; flex-direction: column; justify-content: center;">
       <button type="button" class="btn btn-primary btn-lg" style="padding:30px; margin:80px;" data-toggle="modal"
@@ -298,9 +315,14 @@
           </button>
         </div>
         <div class="modal-body">
-          <form action="" method="post">
-            <% let i=0; if(pickupBoys.length>0) { pickupBoys.forEach(function(item){ i++; %>
+          <form action="/e-waste-center/approveOrder" method="post">
+            <input style="display: none;" type="text" name="cemail" id="cemail">
+            <input style="display: none;" type="text" name="camount" id="camount">
+            <input style="display: none;" type="text" name="cdate" id="cdate">
+            <input style="display: none;" type="text" name="caddr" id="caddr">
+            <% let j=0; if(pickupBoys.length>0) { pickupBoys.forEach(function(item){ j++; %>
             <input style="display: none;" type="text" name="pbPhone" value="<%= item.phone%>">
+            <input style="display: none;" type="text" name="email" value="<%= item.email%>">
             <div class="form-check mt-3">
               <input class="form-check-input" type="radio" name="role" value="Employee" id="flexRadioDefault2"
                 checked>
@@ -323,6 +345,7 @@
                 <a class="dropdown-item" href="#">03:00 PM - 06:00 PM</a>
               </div>
             </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
           </form>
         </div>
 
@@ -367,6 +390,43 @@
     function showCentresTable() {
       document.getElementById("userTable").style.display = "none";
       document.getElementById("centresTable").style.display = "table";
+    }
+
+    let count = document.getElementById("count").innerText;
+  for(let i=1;i<=count;i++){
+    let elements = JSON.parse(document.getElementById(`dummy${i}`).innerText)
+    let text = "";
+    let idx = 1;
+    elements.forEach(element => {
+      text+=`${idx}. ${element.model} Price: ${element.price}<br>`;
+      idx++;
+    });
+    document.getElementById(`items${i}`).innerHTML = text;
+
+  }
+
+  function formatDateToSQL(inputDate) {
+  // Create a Date object from the input date string
+  const date = new Date(inputDate);
+
+  // Get the year, month, and day components from the Date object
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+  const day = String(date.getDate()).padStart(2, '0');
+
+  // Format the date in SQL format (YYYY-MM-DD)
+  const sqlFormattedDate = `${year}-${month}-${day}`;
+
+  return sqlFormattedDate;
+}
+
+  function details(id){
+      console.log(id);
+      let date = document.getElementById(`date${id}`).innerText;
+      document.getElementById("cemail").value = document.getElementById(`email${id}`).innerText;
+      document.getElementById("camount").value = document.getElementById(`total${id}`).innerText;
+      document.getElementById("cdate").value = formatDateToSQL(date);
+      document.getElementById("caddr").value = document.getElementById(`addr${id}`).innerText;
     }
   </script>
 </body>

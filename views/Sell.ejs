@@ -72,7 +72,7 @@
             </div>
         </div>
     </nav>
-    <h5>Selected E-waste Center: <%=company%> Phone: <%=phone%></h5>
+    <h5>Selected E-waste Center: <%=company%> Phone: <span id="phone"><%=phone%></span></h5>
     <h5>Address: <%=address%></h5>
     <div class="container mt-4">
         <div class="row">
@@ -234,6 +234,7 @@
                         <!-- Cart items will be displayed here -->
                         <form action="/user/checkout" method="post">
                         <input style="display: none;" type="text" name="items" id="sitems">
+                        <input style="display: none;" type="text" id="cPhone" name="cPhone">
                         <button id="checkout" style="display: none;">Checkout</button>
                         </form>
                     </div>
@@ -253,6 +254,7 @@
         const prevButton = document.getElementById("prev-button");
         const nextButton = document.getElementById("next-button");
         const cartItems = document.querySelector(".cart-items");
+        document.getElementById("cPhone").value = document.getElementById("phone").innerText;
         let currentQuestion = 0;
         let idx = 0;
         let items = `<%=JSON.stringify(items)%>`;

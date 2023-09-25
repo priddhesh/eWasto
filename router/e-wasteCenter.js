@@ -4,7 +4,7 @@ const mysql = require("mysql2");
 const centerAuth = require("./e-wasterCenterAuth");
 const moment = require("moment");
 const { sendMail } = require("../nodeMailerConfig");
-const {test, pickupBoyDetails, getCenter, getPickUpBoyNames}  = require("../database");
+const {test, pickupBoyDetails, getCenter, getPickUpBoyNames, userRequestsForCenter}  = require("../database");
 
 const conn = mysql.createConnection({
   host: process.env.MYSQL_URI,
@@ -22,7 +22,8 @@ router.route("/dashboard").get( async (req, res) => {
   password = password.replace(/"/g, '');
   let [data] = await getCenter(phone,password);
   let pbDetails = await getPickUpBoyNames(data.name);
-  res.render("EWasteCenterDashboard",{data:data,pickupBoys:pbDetails});
+  let requests = await userRequestsForCenter(phone);
+  res.render("EWasteCenterDashboard",{data:data,pickupBoys:pbDetails,requests:requests});
 });
 
 
@@ -53,23 +54,26 @@ router.route("/addPickUpBoy").post((req,res)=>{
 
 router.route("/approveOrder").post(async (req,res) =>{
   let email = req.body.email;
-  let phonePB = req.body.phone;
-  
-  
+  let phonePB = req.body.pbPhone;
+  let cemail = req.body.cemail;
+  let camount = req.body.camount;
+  let cdate = req.body.cdate;
+  let caddr = req.body.caddr;
+  console.log(phonePB);
   const randomNumber = Math.floor(Math.random() * 1000000);
   const OTP = String(randomNumber).padStart(6, '0');
   const pBDetails = await pickupBoyDetails(phonePB);
-  
   let namePB = pBDetails[0].name;
   let phoneNo = pBDetails[0].phone;
   let emailID = pBDetails[0].email;
+  console.log(cdate);
   
-  conn.query(`UPDATE recycling_items SET status = 0 , otp = '${OTP}', phonePB = '${phonePB}' WHERE email = '${email}'`, (err, rows) => {
+  conn.query(`UPDATE recycling_items SET status = 0 , otp = '${OTP}', phonePB = '${phonePB}' WHERE email = '${cemail}' AND price = '${camount}' AND date = '${cdate}' AND address='${caddr}'`, (err, rows) => {
     if (err) throw err;
     else {
       var mailOptions = {
         from: process.env.EMAIL,
-        to: `${email}`,
+        to: `${cemail}`,
         subject: "Your order approved",
         text: `OTP : ${OTP}
         Details of pickup boy:

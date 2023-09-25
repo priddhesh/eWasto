@@ -148,23 +148,24 @@
         <table class="table table-hover">
             <thead>
               <tr class="table-info">
-                <th scope="col">Request No</th>
-                <th scope="col">Sub Category</th>
+                <th scope="col">Sr.No.</th>
+                <th scope="col">Items</th>
+                <th scope="col">Amount</th>
                 <th scope="col">Address</th>
-                <th scope="col">Time</th>
                 <th scope="col">Date</th>
                 <th scope="col">Status</th>
                 <th scope="col">Cancel</th>
-                
               </tr>
             </thead>
             <tbody>
-            <% let i=0; if(requests.length>0) { requests.forEach(function(item){ i++; %>
+            <% let i=0%>
+            <% if(requests.length>0) { requests.forEach(function(item){ i++; %>
               <tr class="table-info">
                 <th scope="row"><%= i%></th>
-                <td><%= item.company%></td>
-                <td><%= item.model%></td>
-                <td><%= item.price%></td>
+                <td style="display: none;" id="dummy<%=i%>"><%= item.items%></td>
+                <td id="items<%=i%>"></td>
+                <td id="total<%=i%>"><%= item.price%></td>
+                <td><%= item.address%></td>
                 <td><%= item.date.toString().substring(0,15) %></td>
                 <% if (item.status === 1) { %>
                     <td class="bg-warning">Delivered</td>
@@ -188,7 +189,8 @@
               <% } %>
             </tbody>
           </table>
-     </div>
+        </div>
+        <h1 id="count" style="display: none;"><%=i%></h1>
     
      <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -233,6 +235,18 @@
 <script>
   function loadGoogleTranslate(){
       new google.translate.TranslateElement("google_element");
+  }  
+  let count = document.getElementById("count").innerText;
+  for(let i=1;i<=count;i++){
+    let elements = JSON.parse(document.getElementById(`dummy${i}`).innerText)
+    let text = "";
+    let idx = 1;
+    elements.forEach(element => {
+      text+=`${idx}. ${element.model} Price: ${element.price}<br>`;
+      idx++;
+    });
+    document.getElementById(`items${i}`).innerHTML = text;
+
   }
 </script>
 </html>

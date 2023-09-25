@@ -326,6 +326,18 @@ const userRequests = async (name, password) => {
   }
 };
 
+const userRequestsForCenter = async (phone) => {
+  try {
+    let [requests] = await pool.execute(
+      `SELECT * FROM recycling_items WHERE cPhone = ?`,
+      [phone]
+    );
+    return requests;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 const getCenter = async (phone,password) =>{
   try {
     const [data] = await pool.query(
@@ -381,5 +393,6 @@ module.exports = {
   getCenter,
   getPickUpBoyNames,
   getElectronicItems,
+  userRequestsForCenter,
   test,
 };
