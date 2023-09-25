@@ -88,10 +88,16 @@ router.route("/sell")
 
 router
   .route('/checkout')
-  .post((req,res)=>{
+  .post(async (req,res)=>{
       let items = req.body.items;
+      let user = req.session.username;
+      let password = req.session.password;
+      user = user.replace(/"/g, '');
+      password = password.replace(/"/g, '');
+      let [data] = await getEmail(user,password);
+      let email = data.email;
       items = JSON.parse(items);
-      res.render("Checkout",{items:items});
+      res.render("Checkout",{name:user,email:email,items:items});
   })
   .get((req,res)=>{
     res.render("Checkout");
