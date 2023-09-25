@@ -1,23 +1,374 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="/scripts/script.js" defer></script>
-    <link rel="stylesheet" href="/styles/toast.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .container {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .quiz-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            margin-right: 10px;
+        }
+
+        .cart-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn {
+            margin-right: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
+
 <body>
-    <h1><%= company %></h1>
-    <h1><%= phone %></h1>
-    <h1><%= address %></h1>
-    <div style="left: 20px; bottom: 20px;" class="toast" id="ewasteLocatorToast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="10000">
-        <div class="toast-header">
-            <strong class="mr-auto">We Appreciate Your Commitment to E-Waste Recycling!</strong>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Pricing</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Dropdown link
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div class="toast-body">
-          Your decision to recycle e-waste is a step towards a greener, healthier planet. Together, we're making a difference in reducing electronic waste and protecting our environment. You should be proud!
+    </nav>
+    <%= company%>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="quiz-container">
+                    <form id="quiz-form">
+                        <div class="question">
+                            <p><strong>Category:</strong></p>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" name="q1" value="Mobile" id="q1-a">
+                                <label class="form-check-label" for="q1-a">a) Mobile</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" name="q1" value="Laptop" id="q1-b">
+                                <label class="form-check-label" for="q1-b">b) Laptop</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" name="q1" value="TV" id="q1-c">
+                                <label class="form-check-label" for="q1-c">c) TV</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" name="q1" value="Refrigerator" id="q1-d">
+                                <label class="form-check-label" for="q1-d">d) Refrigerator</label>
+                            </div>
+                        </div>
+
+                        <div class="question">
+                            <p><strong>Company:</strong></p>
+                            <div id="cTV">
+                            <% if (items.length > 0) { %>
+                              <% const uniqueCompanies = new Set(); %>
+                              <% items.forEach(function (item) { %>
+                                <% if (item.category === "TV" && !uniqueCompanies.has(item.company)) { %>
+                                  <% uniqueCompanies.add(item.company); %>
+                                  <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="q2" value="<%= item.company %>" id="q2-a">
+                                    <label class="form-check-label" for="q2-a"><%= item.company %></label>
+                                  </div>
+                                <% } %>
+                              <% }); %>
+                            <% } else { %>
+                              <p>No company available</p>
+                            <% } %>
+                          </div>
+                          <div id="cMobile">
+                            <% if (items.length > 0) { %>
+                              <% const uniqueCompanies = new Set(); %>
+                              <% items.forEach(function (item) { %>
+                                <% if (item.category === "Mobile" && !uniqueCompanies.has(item.company)) { %>
+                                  <% uniqueCompanies.add(item.company); %>
+                                  <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="q2" value="<%= item.company %>" id="q2-a">
+                                    <label class="form-check-label" for="q2-a"><%= item.company %></label>
+                                  </div>
+                                <% } %>
+                              <% }); %>
+                            <% } else { %>
+                              <p>No company available</p>
+                            <% } %>
+                          </div>   
+                          <div id="cLaptop">
+                            <% if (items.length > 0) { %>
+                              <% const uniqueCompanies = new Set(); %>
+                              <% items.forEach(function (item) { %>
+                                <% if (item.category === "Laptop" && !uniqueCompanies.has(item.company)) { %>
+                                  <% uniqueCompanies.add(item.company); %>
+                                  <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="q2" value="<%= item.company %>" id="q2-a">
+                                    <label class="form-check-label" for="q2-a"><%= item.company %></label>
+                                  </div>
+                                <% } %>
+                              <% }); %>
+                            <% } else { %>
+                              <p>No company available</p>
+                            <% } %>
+                          </div>   
+                          <div id="cRefrigerator">
+                            <% if (items.length > 0) { %>
+                              <% const uniqueCompanies = new Set(); %>
+                              <% items.forEach(function (item) { %>
+                                <% if (item.category === "Refrigerator" && !uniqueCompanies.has(item.company)) { %>
+                                  <% uniqueCompanies.add(item.company); %>
+                                  <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="q2" value="<%= item.company %>" id="q2-a">
+                                    <label class="form-check-label" for="q2-a"><%= item.company %></label>
+                                  </div>
+                                <% } %>
+                              <% }); %>
+                            <% } else { %>
+                              <p>No company available</p>
+                            <% } %>
+                          </div>            
+
+                        </div>
+
+                        <div class="question">
+                            <p><strong>Model:</strong></p>
+                            <div id="TVSAM"> 
+                              <% if (items.length > 0) { %>
+                                <% const uniqueModels = new Set(); %>
+                                <% items.forEach(function (item) { %>
+                                  <% if (item.category === "TV" && item.company === "Samsung" && !uniqueModels.has(item.model)) { %>
+                                    <% uniqueModels.add(item.model); %>
+                                    <div class="form-check">
+                                      <input type="radio" class="form-check-input" name="q3" value="<%= item.model %>" id="q3-a">
+                                      <label class="form-check-label" for="q3-a"><%= item.model %></label>
+                                    </div>
+                                  <% } %>
+                                <% }); %>
+                              <% } else { %>
+                                <p>No company available</p>
+                              <% } %>                              
+                          </div>
+                          <div id="TVLG"> 
+                            <% if (items.length > 0) { %>
+                              <% const uniqueModels = new Set(); %>
+                              <% items.forEach(function (item) { %>
+                                <% if (item.category === "TV" && item.company === "LG" && !uniqueModels.has(item.model)) { %>
+                                  <% uniqueModels.add(item.model); %>
+                                  <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="q3" value="<%= item.model %>" id="q3-a">
+                                    <label class="form-check-label" for="q3-a"><%= item.model %></label>
+                                  </div>
+                                <% } %>
+                              <% }); %>
+                            <% } else { %>
+                              <p>No company available</p>
+                            <% } %>                              
+                        </div>
+                        <div id="TVSONY"> 
+                          <% if (items.length > 0) { %>
+                            <% const uniqueModels = new Set(); %>
+                            <% items.forEach(function (item) { %>
+                              <% if (item.category === "TV" && item.company === "Sony" && !uniqueModels.has(item.model)) { %>
+                                <% uniqueModels.add(item.model); %>
+                                <div class="form-check">
+                                  <input type="radio" class="form-check-input" name="q3" value="<%= item.model %>" id="q3-a">
+                                  <label class="form-check-label" for="q3-a"><%= item.model %></label>
+                                </div>
+                              <% } %>
+                            <% }); %>
+                          <% } else { %>
+                            <p>No company available</p>
+                          <% } %>                              
+                      </div>
+
+                        </div>
+
+                        <button type="button" id="prev-button" class="btn btn-secondary">Previous</button>
+                        <button type="button" id="next-button" class="btn btn-primary">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="cart-container">
+                    <h1 class="mb-4">Shopping Cart</h1>
+                    <div class="cart-items">
+                        <!-- Cart items will be displayed here -->
+                    </div>
+                    <button class="btn btn-danger" id="reset-cart">Reset Cart</button>
+                </div>
+                
+            </div>
         </div>
-      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        const form = document.getElementById("quiz-form");
+        const questions = form.querySelectorAll(".question");
+        const prevButton = document.getElementById("prev-button");
+        const nextButton = document.getElementById("next-button");
+        const cartItems = document.querySelector(".cart-items");
+        let currentQuestion = 0;
+        let items = `<%=JSON.stringify(items)%>`;
+        items = items.replace(/&#34;/g, '"');
+        items = JSON.parse(items);
+        console.log(items);
+
+        function showQuestion(index) {
+            questions.forEach((question, i) => {
+                if (i === index) {
+                    question.style.display = "block";
+                    if(i==1){
+                      let category =  form.querySelector('input[name="q1"]:checked').value;
+                      if(category=="TV"){
+                         document.getElementById("cTV").style.display = "block";
+                         document.getElementById("cMobile").style.display = "none";
+                         document.getElementById("cLaptop").style.display = "none";
+                         document.getElementById("cRefrigerator").style.display = "none";
+                      }else if(category=="Mobile"){
+                        document.getElementById("cTV").style.display = "none";
+                         document.getElementById("cMobile").style.display = "block";
+                         document.getElementById("cLaptop").style.display = "none";
+                         document.getElementById("cRefrigerator").style.display = "none";
+                      }else if(category=="Laptop"){
+                        document.getElementById("cTV").style.display = "none";
+                         document.getElementById("cMobile").style.display = "none";
+                         document.getElementById("cLaptop").style.display = "block";
+                         document.getElementById("cRefrigerator").style.display = "none";
+                      }else{
+                        document.getElementById("cTV").style.display = "none";
+                         document.getElementById("cMobile").style.display = "none";
+                         document.getElementById("cLaptop").style.display = "none";
+                         document.getElementById("cRefrigerator").style.display = "block";
+                      }
+                    }else if(i==2){
+                      let company = form.querySelector('input[name="q2"]:checked').value;
+                      let category =  form.querySelector('input[name="q1"]:checked').value;
+
+                      if(category=="TV"){
+                        if(company=="Samsung"){
+                          document.getElementById("TVSAM").style.display = "block";
+                          document.getElementById("TVSONY").style.display = "none";
+                          document.getElementById("TVLG").style.display = "none";
+                        }else if(company=="Sony"){
+                          document.getElementById("TVSAM").style.display = "none";
+                          document.getElementById("TVSONY").style.display = "block";
+                          document.getElementById("TVLG").style.display = "none";
+                        }else{
+                          document.getElementById("TVSAM").style.display = "none";
+                          document.getElementById("TVSONY").style.display = "none";
+                          document.getElementById("TVLG").style.display = "block";
+                        }
+                      }
+                    }
+                } else {
+                    question.style.display = "none";
+                }
+            });
+
+            if (index === 0) {
+                prevButton.style.display = "none";
+            } else {
+                prevButton.style.display = "inline-block";
+            }
+
+            if (index === questions.length - 1) {
+                nextButton.textContent = "Add to Cart";
+            } else {
+                nextButton.textContent = "Next";
+            }
+        }
+
+        prevButton.addEventListener("click", () => {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            }
+        });
+
+        nextButton.addEventListener("click", () => {
+            
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            } else {
+                const selectedCategory = form.querySelector('input[name="q1"]:checked').value;
+                const selectedCompany = form.querySelector('input[name="q2"]:checked').value;
+                const selectedModel = form.querySelector('input[name="q3"]:checked').value;
+                
+                if (selectedCategory && selectedCompany && selectedModel) {
+                    const cartItem = document.createElement("div");
+                    cartItem.classList.add("cart-item");
+                    cartItem.innerHTML = `
+                        <h5 class="cart-item-title">Category: ${selectedCategory}</h5>
+                        <p><strong>Company:</strong> ${selectedCompany}</p>
+                        <p><strong>Model:</strong> ${selectedModel}</p>
+                    `;
+
+                    // Append the cart item to the cart container
+                    cartItems.appendChild(cartItem);
+
+                    // Reset the form for the next question
+                    form.reset();
+
+                    // Redirect to the first question
+                    currentQuestion = 0;
+                    showQuestion(currentQuestion);
+                } else {
+                    alert("Please select options for all questions before adding to the cart.");
+                }
+            }
+        });
+        
+        showQuestion(currentQuestion);
+        function resetCart() {
+            cartItems.innerHTML = '';
+        }
+    
+        const resetCartButton = document.getElementById("reset-cart");
+        resetCartButton.addEventListener("click", resetCart);
+
+        
+    </script>
 </body>
+
 </html>

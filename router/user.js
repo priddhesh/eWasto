@@ -3,7 +3,7 @@ const router = express.Router();
 const mysql = require("mysql2");
 const userAuth = require("./userAuth");
 const moment = require("moment");
-const {creditPoints, getEmail, userData, userRequests } = require('../database');
+const {creditPoints, getEmail, userData, userRequests, getElectronicItems } = require('../database');
 
 const conn = mysql.createConnection({
   host: process.env.MYSQL_URI,
@@ -63,7 +63,7 @@ router.route("/placeRequest").post(async (req,res)=>{
 
 //for selection of electronic items
 router.route("/sell")
-.get((req,res)=>{
+.get(async (req,res)=>{
   let company = req.session.company;
   let phone = req.session.phone;
   let address = req.session.address;
@@ -71,17 +71,19 @@ router.route("/sell")
   {
   res.redirect("/map");
   }else{
-    res.render("Sell",{company:company,phone:phone,address:address});
+    let electronicItems = await getElectronicItems();
+    res.render("Sell",{company:company,phone:phone,address:address,items:electronicItems});
   }
 })
-.post((req,res)=>{
+.post(async (req,res)=>{
   let company = req.body.center;
   let phone  = req.body.phone;
   let address = req.body.address;
   if(company==undefined || phone==undefined){
     res.redirect("/map");
   }
-  res.render("Sell",{company:company,phone:phone,address: address});
+  let electronicItems = await getElectronicItems();
+  res.render("Sell",{company:company,phone:phone,address: address, items: electronicItems});
 });
 
 router

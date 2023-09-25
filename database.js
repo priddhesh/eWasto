@@ -352,6 +352,15 @@ const getPickUpBoyNames = async (center)=>{
   }
 }
 
+const getElectronicItems = async()=>{
+  try {
+    const [data] = await pool.execute(`SELECT * FROM electronic_items`);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 module.exports = {
   authenticate,
   checkCode,
@@ -371,5 +380,6 @@ module.exports = {
   confirmOrder,
   getCenter,
   getPickUpBoyNames,
+  getElectronicItems,
   test,
 };

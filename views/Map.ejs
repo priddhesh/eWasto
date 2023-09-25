@@ -211,6 +211,9 @@
   </script>
   <script defer>
     function verify(id){
+      document.getElementById(`cCompany`).value = document.getElementById(`centerS${id}`).innerText;
+      document.getElementById(`cPhone`).value = document.getElementById(`phoneS${id}`).innerText;
+      document.getElementById(`cAddress`).value = document.getElementById(`addressS${id}`).innerText;
      if(document.getElementById("role").innerText=="user"){
       document.getElementById(`form${id}`).submit();
      };
@@ -220,9 +223,6 @@
       document.getElementById(`center${i}`).value = document.getElementById(`centerS${i}`).innerText;
       document.getElementById(`phone${i}`).value = document.getElementById(`phoneS${i}`).innerText;
       document.getElementById(`address${i}`).value = document.getElementById(`addressS${i}`).innerText;
-      document.getElementById(`cCompany`).value = document.getElementById(`centerS${i}`).innerText;
-      document.getElementById(`cPhone`).value = document.getElementById(`phoneS${i}`).innerText;
-      document.getElementById(`cAddress`).value = document.getElementById(`addressS${i}`).innerText;
     }
   </script>
 </body>
