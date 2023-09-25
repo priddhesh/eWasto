@@ -72,7 +72,8 @@
             </div>
         </div>
     </nav>
-    <%= company%>
+    <h5>Selected E-waste Center: <%=company%> Phone: <%=phone%></h5>
+    <h5>Address: <%=address%></h5>
     <div class="container mt-4">
         <div class="row">
             <div class="col-md-8">
@@ -225,11 +226,16 @@
                     </form>
                 </div>
             </div>
+            
             <div class="col-md-4">
                 <div class="cart-container">
                     <h1 class="mb-4">Shopping Cart</h1>
                     <div class="cart-items">
                         <!-- Cart items will be displayed here -->
+                        <form action="/user/checkout" method="post">
+                        <input style="display: none;" type="text" name="items" id="sitems">
+                        <button id="checkout" style="display: none;">Checkout</button>
+                        </form>
                     </div>
                     <button class="btn btn-danger" id="reset-cart">Reset Cart</button>
                 </div>
@@ -248,11 +254,12 @@
         const nextButton = document.getElementById("next-button");
         const cartItems = document.querySelector(".cart-items");
         let currentQuestion = 0;
+        let idx = 0;
         let items = `<%=JSON.stringify(items)%>`;
         items = items.replace(/&#34;/g, '"');
         items = JSON.parse(items);
-        console.log(items);
-
+        let selectItems = [];
+       
         function showQuestion(index) {
             questions.forEach((question, i) => {
                 if (i === index) {
@@ -334,19 +341,38 @@
                 const selectedCategory = form.querySelector('input[name="q1"]:checked').value;
                 const selectedCompany = form.querySelector('input[name="q2"]:checked').value;
                 const selectedModel = form.querySelector('input[name="q3"]:checked').value;
+                let price;
+                items.forEach((item)=>{
+                   if(item.company==selectedCompany && item.model==selectedModel){
+                    price = item.price;
+                   }
+                })
+                let ewaste = {"category": selectedCategory,
+                              "company": selectedCompany,
+                              "model": selectedModel,
+                              "price": price};
+
+                selectItems.push(ewaste);
+                document.getElementById("sitems").value = JSON.stringify(selectItems);
                 
+          
                 if (selectedCategory && selectedCompany && selectedModel) {
                     const cartItem = document.createElement("div");
                     cartItem.classList.add("cart-item");
+                    idx++;
                     cartItem.innerHTML = `
-                        <h5 class="cart-item-title">Category: ${selectedCategory}</h5>
-                        <p><strong>Company:</strong> ${selectedCompany}</p>
-                        <p><strong>Model:</strong> ${selectedModel}</p>
+                        <h5 class="cart-item-title">Category: <span id="cat${idx}">${selectedCategory}</span></h5>
+                        <p><strong>Company:</strong> <span id="cmp${idx}">${selectedCompany}</span></p>
+                        <p><strong>Model:</strong> <span id="m${idx}">${selectedModel}</span></p>
+                        <p><strong>Price:</strong> <span id="p${idx}">${price}</span></p>
                     `;
 
                     // Append the cart item to the cart container
                     cartItems.appendChild(cartItem);
-
+                    
+                    if(document.getElementById("cat1").innerText.length>0){
+                       document.getElementById("checkout").style.display="block";
+                    }
                     // Reset the form for the next question
                     form.reset();
 
@@ -361,7 +387,16 @@
         
         showQuestion(currentQuestion);
         function resetCart() {
-            cartItems.innerHTML = '';
+            idx = 0;
+            let htmlContent = `
+    <form action="" method="post">
+        <input style="display: none;" type="text" name="items" id="sitems">
+        <button id="checkout" style="display: none;">Checkout</button>
+    </form>
+`;
+            cartItems.innerHTML = htmlContent;
+            selectItems = [];
+            document.getElementById("sitems").value = "";
         }
     
         const resetCartButton = document.getElementById("reset-cart");

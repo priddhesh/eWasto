@@ -87,6 +87,17 @@ router.route("/sell")
 });
 
 router
+  .route('/checkout')
+  .post((req,res)=>{
+      let items = req.body.items;
+      items = JSON.parse(items);
+      res.render("Checkout",{items:items});
+  })
+  .get((req,res)=>{
+    res.render("Checkout");
+  });
+
+router
   .route('/logout')
   .get((req, res) => {
     req.session.destroy()
